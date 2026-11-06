@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080e14" />
+  <meta name="description" content="Escape an orbital station, fight through Meridian City and face ARCHON to restore the last forest. A playable browser mech campaign." />
+  <title>Orbital Breach | Eden Protocol</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body>
+  <canvas id="game" aria-label="Orbital Breach 3D game arena"></canvas>
+  <div id="vignette"></div>
+  <div id="damage"></div>
+  <div id="realm-transition" aria-hidden="true"></div>
+  <div id="hud" class="hidden">
+    <header class="hud-top">
+      <div class="match"><div class="team blue"><span>SCORE</span><strong id="score-blue">00000</strong></div><div class="match-time"><strong id="timer">03:00</strong><span id="match-goal">LIMIT 03:00</span></div><div class="team red"><span>COMBO</span><strong id="score-red">×1.0</strong><i class="combo-bar"><b id="combo-bar"></b></i></div></div>
+      <div class="location"><span class="compass">NADIR <i></i> <b id="heading">090</b> <i></i> ZENITH</span><strong id="sector">PROMENADE / 01</strong><span id="gravity">MAGNETIC BOOTS · 1.00 G</span></div>
+      <div class="top-right"><span class="live-dot"></span> EDEN PROTOCOL <button id="pause" aria-label="Pause game">II</button></div>
+    </header>
+    <div id="feed" aria-live="polite"></div>
+    <div id="popups" aria-hidden="true"></div>
+    <div id="enemy-markers" aria-hidden="true"></div>
+    <aside id="chapter-card" class="hidden"><span id="chapter-number"></span><h2 id="chapter-name"></h2><p id="chapter-copy"></p></aside>
+    <aside id="mission-card"><span id="mission-chapter">EDEN PROTOCOL</span><strong id="mission-objective">Recover three relay cells</strong><p id="mission-hint">Activate the launch console.</p><small id="campaign-threat"></small><small id="campaign-upgrade"></small></aside>
+    <div id="objective-marker" class="hidden" aria-hidden="true"><b>◇</b><span id="objective-marker-label"></span></div>
+    <aside id="radio" class="hidden" aria-live="polite"><span id="radio-speaker">IRIS / STATION KEEPER</span><p id="radio-text"></p></aside>
+    <div id="interact-prompt" class="hidden"><kbd>E</kbd><span id="interact-label"></span></div>
+    <div id="grapple-status"><kbd>C</kbd><span id="grapple-label">TETHER READY · AIM AT A SURFACE</span></div>
+    <aside id="coach" class="hidden" aria-live="polite"><div class="coach-meta"><span id="coach-step">FLIGHT CHECK 1 / 6</span><span class="safe-label">HOSTILE FIRE OFF</span></div><h2 id="coach-title"></h2><p id="coach-copy"></p><div id="coach-keys"></div><div id="coach-step-status"></div><div class="coach-footer"><div id="coach-progress"></div><span><kbd>TAB</kbd> SKIP · <kbd>H</kbd> REPLAY</span></div></aside>
+    <div id="context-tip" class="hidden" role="status"></div>
+    <div id="spawn-protection" class="hidden"></div>
+    <div id="dash-status"><kbd>X</kbd> <span id="dash-state">DASH READY</span><i><b id="dash-meter"></b></i></div>
+    <div id="boss-status" class="hidden"><span id="boss-phase">ARCHON</span><i><b id="boss-integrity"></b></i></div>
+    <div id="target-label"></div>
+    <div id="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
+    <div id="hitmarker">×</div>
+    <div id="event" aria-live="polite"></div>
+    <div id="notice">AIRLOCK AHEAD <span>F to release magnetic boots</span></div>
+    <footer class="hud-bottom">
+      <div class="vitals"><div class="mech-outline"><i class="head"></i><i class="torso"></i><i class="arm l"></i><i class="arm r"></i><i class="leg l"></i><i class="leg r"></i></div><div class="vital-bars"><div><span>SHIELD</span><b id="shield-value">100</b></div><div class="bar"><i id="shield-bar"></i></div><div><span>CORE INTEGRITY</span><b id="health-value">100</b></div><div class="bar core"><i id="health-bar"></i></div></div></div>
+      <div class="weapons"><div class="weapon"><span><kbd>LMB</kbd> LEFT ARM</span><strong id="weapon-left">MX-9 GATLING</strong><div class="heat"><i id="heat-left"></i></div><small id="left-state">READY</small></div><div class="shoulder"><kbd>G</kbd><span id="shoulder-names">SHOULDER</span><strong id="missile-state">READY</strong></div><div class="weapon"><span>RIGHT ARM <kbd>RMB</kbd></span><strong id="weapon-right">FK-40 FLAK CANNON</strong><div class="heat"><i id="heat-right"></i></div><small id="right-state">READY</small></div></div>
+      <div class="navigation"><canvas id="radar" width="180" height="180" aria-label="Enemy proximity radar"></canvas><div><strong id="speed">0</strong><span>M / S</span></div><small id="flight-mode">MAG LOCK</small></div>
+    </footer>
+    <div class="key-strip"><span><kbd>W A S D</kbd> MOVE</span><span><kbd>SPACE</kbd> JUMP / JETS</span><span><kbd>SHIFT</kbd> BOOST</span><span><kbd>X</kbd> DASH</span><span><kbd>C</kbd> TETHER</span><span><kbd>F</kbd> BOOTS</span><span><kbd>E</kbd> INTERACT</span><span><kbd>V</kbd> CAMERA</span><span><kbd>H</kbd> HELP</span></div>
+  </div>
+  <main id="menu">
+    <header class="menu-top"><a class="brand" href="/" aria-label="Orbital Breach home"><span class="brand-symbol">◈</span><span>ORBITAL<span class="brand-slash"> / </span>BREACH<small>EDEN PROTOCOL</small></span></a><div class="deck-status"><span class="live-dot"></span> KESTREL / LAUNCH DECK <span class="deck-status-code">07</span></div></header>
+    <div class="menu-stage">
+      <section class="menu-content" aria-labelledby="campaign-title">
+        <div class="briefing-label"><span id="menu-briefing-label">CAMPAIGN BRIEFING</span><b id="menu-progress-label">01 — 03</b></div>
+        <h1 id="campaign-title">The last<br><em>way home.</em></h1>
+        <p class="intro">Earth went silent. Its machines didn’t.<br>Reconnect the gates. Bring the forest home.</p>
+        <div class="launch-objective"><span class="launch-objective-number" id="menu-chapter-number">01</span><div><span id="menu-objective-label">YOUR FIRST OBJECTIVE</span><p id="menu-objective">Launch from Kestrel Station.</p><small id="menu-objective-copy">Iris will guide you from orbit to Earth.</small><ul class="menu-intel" id="menu-intel"></ul></div></div>
+        <div class="menu-actions"><button id="deploy" disabled><span id="deploy-label">INITIALIZING SYSTEMS</span><span aria-hidden="true">↗</span></button><button class="text-button hidden" id="restart">NEW CAMPAIGN</button>
+          <label class="training-option"><input id="training" type="checkbox"><span>First flight? Include guided training.</span></label></div>
+      </section>
+      <aside class="pilot-readout" aria-label="Your mech"><span class="readout-kicker">YOUR FRAME / READY TO DEPLOY</span><strong id="frame-name">COBALT <small>MK 1</small></strong>
+        <div class="paint-swatches" id="paint-swatches" role="radiogroup" aria-label="Frame paint"></div>
+        <div class="menu-gear"><button type="button" id="inspect-frame" class="gear-tile"><strong>INSPECT</strong><small>Every part, up close</small><span aria-hidden="true">↗</span></button><button class="gear-tile" id="open-loadout" type="button"><strong>LOADOUT <kbd>L</kbd></strong><small>Refit your mech</small><span aria-hidden="true">↗</span></button><button class="gear-tile" id="open-shop" type="button"><strong>GEAR SHOP <kbd>S</kbd></strong><small><b id="shop-credits">0</b> CR to spend</small><span aria-hidden="true">↗</span></button></div>
+        <p class="drag-hint" title="Double-click to reset the view"><kbd>DRAG</kbd> or <kbd>←</kbd><kbd>→</kbd> to rotate</p></aside>
+    </div>
+    <section class="menu-route" aria-label="Campaign route"><div class="menu-route-heading"><div><span>THE CAMPAIGN</span><p>Three worlds. One way forward.</p></div><button class="gear-tile" id="open-board" type="button" aria-label="Mission board: choose a team operation"><strong>MISSION BOARD <kbd>M</kbd></strong><span aria-hidden="true">↗</span></button></div><ol class="campaign-route">
+      <li><button type="button" data-preview-chapter="0" class="current-chapter" aria-pressed="true" aria-label="Chapter 1, Kestrel Station"><span class="chapter-head"><small><b>01</b><span class="chapter-tag"> / START HERE</span></small><i class="chapter-state" data-state-for="0"></i></span><svg viewBox="0 0 60 60" fill="none" aria-hidden="true"><ellipse cx="30" cy="30" rx="24" ry="13" transform="rotate(-35 30 30)" stroke="currentColor" stroke-width="3"/><ellipse cx="30" cy="30" rx="18" ry="8" transform="rotate(-35 30 30)" stroke="currentColor"/><path d="m5 40 9-5m33-10 8-5" stroke="currentColor" stroke-width="4"/></svg><span class="chapter-text"><strong>Kestrel Station</strong><em>Break out of orbit</em></span></button></li>
+      <li><button type="button" data-preview-chapter="1" aria-pressed="false" aria-label="Chapter 2, Meridian"><span class="chapter-head"><small><b>02</b><span class="chapter-tag"> / THE CITY</span></small><i class="chapter-state" data-state-for="1"></i></span><svg viewBox="0 0 60 60" fill="none" aria-hidden="true"><path d="M8 48V24h13v24m4 0V10h15v38m4 0V28h9v20M5 49h50M29 16h7m-7 7h7m-7 7h7m-7 7h7m-25-7h6m-6 7h6" stroke="currentColor" stroke-width="2"/></svg><span class="chapter-text"><strong>Meridian</strong><em>Restore the gate network</em></span></button></li>
+      <li><button type="button" data-preview-chapter="2" aria-pressed="false" aria-label="Chapter 3, Eden"><span class="chapter-head"><small><b>03</b><span class="chapter-tag"> / THE LAST FOREST</span></small><i class="chapter-state" data-state-for="2"></i></span><svg viewBox="0 0 60 60" fill="none" aria-hidden="true"><path d="M30 50V23m0 16L18 27m12 4 13-13M10 24l5-10 14-6 16 7 7 13-11 12H23L10 31zM20 51h20" stroke="currentColor" stroke-width="2"/></svg><span class="chapter-text"><strong>Eden</strong><em>Face the final commander</em></span></button></li>
+      <li><button type="button" data-preview-chapter="3" aria-pressed="false" aria-label="Bonus mode, The Gauntlet"><span class="chapter-head"><small><b>04</b><span class="chapter-tag"> / BONUS MODE</span></small><i class="chapter-state" data-state-for="3"></i></span><svg viewBox="0 0 60 60" fill="none" aria-hidden="true"><path d="M30 6 52 18v24L30 54 8 42V18z" stroke="currentColor" stroke-width="2"/><path d="m30 18 12 7v14l-12 7-12-7V25z" stroke="currentColor" stroke-width="2"/><circle cx="30" cy="32" r="3" fill="currentColor"/></svg><span class="chapter-text"><strong>The Gauntlet</strong><em>Endless waves</em></span></button></li>
+      <li><button type="button" data-preview-chapter="4" aria-pressed="false" aria-label="Team Operations, squad versus squad"><span class="chapter-head"><small><b>05</b><span class="chapter-tag"> / SQUAD VS SQUAD</span></small><i class="chapter-state" data-state-for="4"></i></span><svg viewBox="0 0 60 60" fill="none" aria-hidden="true"><circle cx="19" cy="18" r="6" stroke="currentColor" stroke-width="2"/><circle cx="41" cy="18" r="6" stroke="currentColor" stroke-width="2"/><path d="M8 40c0-8 5-12 11-12s11 4 11 12M30 40c0-8 5-12 11-12s11 4 11 12" stroke="currentColor" stroke-width="2"/><path d="M10 50h40M30 24v22" stroke="currentColor" stroke-width="2" stroke-dasharray="3 3"/></svg><span class="chapter-text"><strong>Team Ops</strong><em>Pick a side. Win the fight.</em></span></button></li>
+    </ol></section>
+    <footer class="menu-bottom"><div class="menu-status"><span class="live-dot"></span><span id="load-status">Preparing your frame…</span></div><div class="menu-settings"><button class="text-button" id="controls-toggle" type="button">PILOT FIELD GUIDE <span aria-hidden="true">↗</span></button><label>GRAPHICS <select id="quality"><option value="high">HIGH</option><option value="balanced" selected>BALANCED</option><option value="low">PERFORMANCE</option></select></label><label>SENSATION <select id="sensation" title="Body motion, wind, pressure and bass. Reduced-motion systems get sound only."><option value="full">FULL</option><option value="subtle">SUBTLE</option><option value="off">OFF</option></select></label><button id="sound-toggle" class="text-button">SOUND ON</button></div></footer>
+  </main>
+  <section id="loadout" class="hidden" role="dialog" aria-modal="true" aria-labelledby="ld-title"></section>
+  <section id="shop" class="hidden" role="dialog" aria-modal="true" aria-labelledby="sh-title"></section>
+  <section id="board" class="hidden" role="dialog" aria-modal="true" aria-labelledby="mb-title"></section>
+  <dialog id="manual" aria-labelledby="guide-title">
+    <header class="guide-header"><div><span class="guide-overline">KESTREL SYSTEMS / PILOT FIELD GUIDE</span><h2 id="guide-title">Know your machine.</h2></div><button id="manual-close" class="guide-close" aria-label="Close pilot guide">×</button></header>
+    <nav class="guide-tabs" role="tablist" aria-label="Pilot guide sections"><button type="button" id="guide-tab-mission" role="tab" data-guide-tab="mission" aria-controls="guide-panel" aria-selected="true"><span>01</span> The mission</button><button type="button" id="guide-tab-mech" role="tab" data-guide-tab="mech" aria-controls="guide-panel" aria-selected="false" tabindex="-1"><span>02</span> Your mech</button><button type="button" id="guide-tab-movement" role="tab" data-guide-tab="movement" aria-controls="guide-panel" aria-selected="false" tabindex="-1"><span>03</span> Movement</button><button type="button" id="guide-tab-combat" role="tab" data-guide-tab="combat" aria-controls="guide-panel" aria-selected="false" tabindex="-1"><span>04</span> Combat</button></nav>
+    <section id="guide-panel" role="tabpanel" aria-labelledby="guide-tab-mission" tabindex="0">
+      <div class="guide-visual"><span id="guide-visual-label" class="guide-overline">THE EDEN PROTOCOL / FLIGHT PATH</span>
+        <div id="guide-map"><div class="guide-map-art"><img src="/guide/mission-route.svg" alt="The campaign route connects Kestrel's station ring above Earth, Meridian City's towers, and Eden's Heart Tree." width="720" height="500"><div class="guide-map-points"><button type="button" data-map-chapter="0" aria-pressed="true"><b>01</b><span>KESTREL</span></button><button type="button" data-map-chapter="1" aria-pressed="false"><b>02</b><span>MERIDIAN</span></button><button type="button" data-map-chapter="2" aria-pressed="false"><b>03</b><span>EDEN</span></button></div></div></div>
+        <div id="guide-model" hidden><span id="guide-model-badge">COBALT / MK 1</span><canvas id="guide-preview" tabindex="0" aria-label="3D model. Drag or use left and right arrow keys to rotate; Home resets the view."></canvas><div id="guide-anchor" hidden><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path id="guide-anchor-line" d="M 50 50 H 85 V 79"/></svg><span id="guide-anchor-label"></span></div><div id="guide-model-fallback" hidden><svg viewBox="0 0 260 300" role="img" aria-label="Diagram of the blue Cobalt mech"><g stroke="#87b5c7" stroke-width="2" fill="#284e68"><path d="m100 51 30-10 30 10-5 27h-50zM85 86h90l9 77-54 18-54-18zM49 91h29v83H39zM182 91h29l10 83h-39zM85 183h37l-7 80H79zM138 183h37l6 80h-36z"/><path d="M71 264h47v17H68zM143 264h47l3 17h-47z" fill="#9aadb6"/><path d="M104 60h52v7h-52zM110 113h40v6h-40z" fill="#a4ecf0"/></g></svg></div></div>
+        <span id="guide-visual-caption">Three worlds. One route home.</span>
+      </div>
+      <div id="guide-detail" tabindex="-1"></div>
+    </section>
+    <footer class="guide-footer"><span><kbd>H</kbd> Flight training in game <i></i><kbd>ESC</kbd> Close</span><button type="button" id="guide-done">Got it. <span aria-hidden="true">↗</span></button></footer>
+  </dialog>
+  <section id="results" class="hidden" role="dialog" aria-modal="true" aria-labelledby="results-title">
+    <div class="results-card">
+      <header><span id="results-kicker">CHAPTER 01 COMPLETE</span><h2 id="results-title">Kestrel Station</h2></header>
+      <div class="results-top"><div class="results-rank" id="results-rank" data-rank="A"><span>RANK</span><b>A</b></div><div class="results-score"><span>TOTAL SCORE</span><strong id="results-score">0</strong><em id="results-best"></em></div></div>
+      <div class="results-table" id="results-table"></div>
+      <div class="results-stats" id="results-stats"></div>
+      <p id="results-campaign" class="results-campaign hidden"></p>
+      <footer><button type="button" id="results-retry" class="text-button">RETRY CHAPTER</button><button type="button" id="results-continue"><span id="results-continue-label">CONTINUE</span><span aria-hidden="true">↗</span></button></footer>
+    </div>
+  </section>
+  <div id="fatal" class="hidden" role="alert"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

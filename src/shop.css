@@ -1,0 +1,172 @@
+/* Gear Shop. Fixed overlay above the menu and the HUD, built like the Field Refit screen. */
+#shop { position: fixed; inset: 0; z-index: 9; display: grid; padding: clamp(10px, 2vw, 28px); background: radial-gradient(ellipse at 40% 45%, #0a1a26f2 0%, #04090ffa 78%); backdrop-filter: blur(8px); color: #dcebee; font-family: Rajdhani, Arial, sans-serif; --acc: #f7aa62; --ice: #93eaf0; --good: #8fe3a2; --bad: #ff9d86; --gold: #ffd29c; }
+.sh-shell {
+  position: relative; display: grid; min-height: 0; gap: 10px 16px; grid-template-columns: minmax(0, 1fr) clamp(390px, 36vw, 640px); grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-areas: 'head head' 'tabs tabs' 'stage panel' 'foot foot';
+}
+@media (prefers-reduced-motion: no-preference) { .sh-shell { animation: sh-in .35s cubic-bezier(.2, .7, .2, 1) both; } }
+@keyframes sh-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Header and wallet */
+.sh-head { grid-area: head; display: flex; align-items: center; gap: 18px; padding-bottom: 8px; border-bottom: 1px solid #a1c2cf30; }
+.sh-title { display: grid; gap: 2px; margin-right: auto; }
+.sh-kicker { font: 600 11px Rajdhani; letter-spacing: 2.2px; color: #8bb4c0; }
+.sh-title h2 { margin: 0; font: 600 clamp(32px, 4vw, 50px)/.9 Teko, Arial; letter-spacing: 1.5px; text-transform: uppercase; color: #eef8fa; }
+.sh-wallet { display: grid; justify-items: end; gap: 0; padding-right: 14px; border-right: 2px solid var(--acc); }
+.sh-wallet span { font: 700 11px Rajdhani; letter-spacing: 2.4px; color: #a9c0ca; }
+.sh-wallet b { font: 600 clamp(30px, 3.2vw, 42px)/1 Teko, Arial; letter-spacing: 1px; color: var(--gold); font-variant-numeric: tabular-nums; }
+.sh-wallet b::after { content: ' CR'; font-size: .5em; letter-spacing: 1.5px; color: var(--acc); }
+.sh-btn, .sh-close, .sh-mine, .sh-side { appearance: none; border: 1px solid #a1c2cf4d; background: #0c1c28cc; color: #dcebee; font: 700 12px Rajdhani, Arial; letter-spacing: 1.8px; padding: 10px 16px; cursor: pointer; transition: border-color .15s, background .15s, color .15s; }
+.sh-btn:hover, .sh-close:hover, .sh-mine:hover, .sh-side:hover { border-color: var(--ice); background: #123043; }
+.sh-btn:disabled { opacity: .45; cursor: not-allowed; border-color: #a1c2cf33; background: #0c1c28aa; }
+.sh-btn:disabled:hover { background: #0c1c28aa; border-color: #a1c2cf33; }
+.sh-btn kbd, .sh-mine kbd { font: 700 10px Rajdhani; letter-spacing: .6px; padding: 1px 5px; border: 1px solid #a1c2cf55; color: #a9c8d1; margin-left: 6px; }
+.sh-btn.primary, .sh-btn.buy { background: linear-gradient(180deg, #f7aa62, #e48b3d); color: #1a1008; border-color: #ffd29c; padding: 10px 20px; font-size: 13px; }
+.sh-btn.primary kbd { color: #3b2410; border-color: #3b241066; }
+.sh-btn.primary:hover, .sh-btn.buy:not(:disabled):hover { background: linear-gradient(180deg, #ffbd7d, #f19a50); }
+.sh-btn.buy:disabled { background: #1a232b; color: #8fa2ad; border-color: #a1c2cf33; }
+.sh-btn.buy.armed { background: linear-gradient(180deg, #ffe08a, #f7b84a); border-color: #fff0b8; }
+@media (prefers-reduced-motion: no-preference) { .sh-btn.buy.armed { animation: sh-pulse 1s ease-in-out infinite; } }
+@keyframes sh-pulse { 50% { box-shadow: 0 0 0 4px #f7aa6244, 0 0 22px #f7aa6266; } }
+#shop button:focus-visible, .sh-grid:focus-visible { outline: 2px solid var(--ice); outline-offset: 3px; }
+.sh-card:focus-visible { outline: 2px solid var(--ice); outline-offset: 2px; }
+
+/* Category tabs */
+.sh-tabs { grid-area: tabs; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.sh-tab { appearance: none; flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; padding: 9px 12px; border: 1px solid #a1c2cf2b; border-bottom: 3px solid #4d6b78; background: #0b1822bb; color: #b9d0d9; font: 700 12px Rajdhani; letter-spacing: 1.6px; cursor: pointer; transition: background .15s, border-color .15s; }
+.sh-tab:hover { background: #12293a; }
+.sh-tab.on { border-bottom-color: var(--acc); background: linear-gradient(180deg, #f7aa6226, #0b1822bb 90%); color: #fff4e6; }
+.sh-tab kbd { font: 700 10px Rajdhani; padding: 0 5px; border: 1px solid #a1c2cf55; color: #a9c8d1; }
+.sh-tab.on kbd { color: var(--acc); border-color: #f7aa6288; }
+.sh-tab-count { font: 700 10px Rajdhani; font-style: normal; letter-spacing: 1px; color: #7f9fac; }
+@media (max-width: 1299px) { .sh-tab-count { display: none; } }
+@media (max-width: 1199px) { .sh-tab kbd { display: none; } .sh-tab { padding: 9px 8px; letter-spacing: 1.2px; } }
+
+/* Stage */
+.sh-stage { grid-area: stage; position: relative; min-height: 240px; border: 1px solid #a1c2cf2b; background: radial-gradient(ellipse at 50% 55%, #123043 0%, #08141e 62%, #050b11 100%); overflow: hidden; cursor: grab; touch-action: pan-y; }
+.sh-stage:active { cursor: grabbing; }
+.sh-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.sh-stage.no-gl::after { content: 'Preview needs WebGL. You can still buy and equip.'; position: absolute; inset: 0; display: grid; place-items: center; color: #8ea9b5; font: 600 14px Rajdhani; letter-spacing: 1.2px; }
+.sh-stage::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 84px; background: linear-gradient(180deg, #050b11d9, #050b1100); pointer-events: none; z-index: 1; }
+.sh-stage-tag, .sh-mine, .sh-stage-hint { z-index: 2; }
+.sh-stage-tag { position: absolute; left: 16px; top: 12px; display: grid; gap: 1px; pointer-events: none; max-width: 60%; }
+.sh-stage-tag b { font: 600 clamp(22px, 2.2vw, 28px)/1 Teko, Arial; letter-spacing: 1.2px; color: #eef8fa; text-transform: uppercase; }
+.sh-stage.trying .sh-stage-tag b { color: var(--gold); }
+.sh-stage-tag span { font: 700 11px Rajdhani; letter-spacing: 1.8px; color: var(--acc); }
+.sh-mine { position: absolute; right: 12px; top: 12px; padding: 7px 12px; font-size: 11px; background: #0b1822cc; }
+.sh-mine.on { border-color: var(--acc); background: #f7aa6224; color: #fff4e6; }
+.sh-stage-hint { position: absolute; right: 14px; top: 52px; font: 600 10px Rajdhani; letter-spacing: 2px; color: #6e8d99; pointer-events: none; }
+
+/* Selected item: sits along the bottom of the stage */
+.sh-info { position: absolute; left: 10px; right: 10px; bottom: 10px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 18px; padding: 10px 14px 12px; border: 1px solid #a1c2cf40; border-top: 2px solid var(--acc); background: #07131df2; backdrop-filter: blur(6px); cursor: default; }
+.sh-info-main { min-width: 0; display: grid; gap: 3px; align-content: start; }
+.sh-info-top { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; }
+.sh-info h3 { margin: 0; font: 600 clamp(22px, 2.1vw, 28px)/1 Teko, Arial; letter-spacing: 1.2px; text-transform: uppercase; color: #f5fbfc; }
+.sh-info-sub { font: 600 12px Rajdhani; letter-spacing: .8px; color: #8fb1be; }
+.sh-info p { margin: 2px 0 0; font: 500 14px/1.35 Rajdhani; color: #c4d7de; max-width: 62ch; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.sh-hint { margin: 0; color: #8fb1be; font: 600 14px Rajdhani; letter-spacing: 1px; }
+.sh-tag { font: 700 10px Rajdhani; font-style: normal; letter-spacing: 1.4px; color: #9fd6df; border: 1px solid #93eaf044; padding: 1px 6px; white-space: nowrap; }
+.sh-tier { font: 700 10px Rajdhani; font-style: normal; letter-spacing: 1.4px; padding: 1px 6px; white-space: nowrap; border: 1px solid currentColor; }
+.tier-starter { color: #9fb4bd; } .tier-common { color: #9fe0b0; } .tier-field { color: #8fd2ff; } .tier-elite { color: #c9a8ff; } .tier-prototype { color: #ffcf7a; } .tier-legend { color: #ff9ad0; }
+.sh-stats { display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 4px; }
+.sh-stat { display: grid; grid-template-columns: auto 54px auto; gap: 6px; align-items: center; font: 600 10px Rajdhani; letter-spacing: 1px; color: #86a4b1; }
+.sh-stat i { font-style: normal; min-width: 52px; }
+.sh-stat u { display: block; height: 4px; background: #ffffff17; text-decoration: none; }
+.sh-stat s { display: block; height: 100%; background: var(--ice); text-decoration: none; }
+.sh-stat.low s { background: #f0a56a; }
+.sh-stat b { font-weight: 700; color: #d7e9ee; }
+.sh-deltas { display: flex; flex-wrap: wrap; gap: 2px 14px; font: 700 11px Rajdhani; letter-spacing: 1px; margin-top: 2px; }
+.sh-deltas .good { color: var(--good); } .sh-deltas .bad { color: var(--bad); } .sh-deltas .flat { color: #7f9aa6; }
+.sh-swatch { display: flex; gap: 4px; margin-top: 4px; }
+.sh-swatch i { width: 26px; height: 14px; border: 1px solid #00000066; }
+.sh-info-buy { display: grid; gap: 6px; align-content: start; justify-items: stretch; min-width: 176px; text-align: right; }
+.sh-bigprice { font: 600 32px/1 Teko, Arial; letter-spacing: 1px; color: var(--gold); }
+.sh-bigprice small { font: 700 12px Rajdhani; letter-spacing: 1.5px; color: var(--acc); margin-left: 5px; }
+.sh-bigprice.own { font-size: 20px; letter-spacing: 2px; color: #bcd2da; } .sh-bigprice.own.equipped { color: var(--good); }
+.sh-reason { font: 700 11px Rajdhani; letter-spacing: 1.2px; color: #a9c0ca; min-height: 13px; }
+.sh-sides { display: flex; justify-content: flex-end; align-items: center; gap: 4px; }
+.sh-side { padding: 5px 9px; font-size: 11px; letter-spacing: 1.2px; }
+.sh-side.on { border-color: var(--acc); background: #f7aa6224; color: #fff4e6; }
+.sh-sides kbd { font: 700 10px Rajdhani; padding: 1px 5px; border: 1px solid #a1c2cf55; color: #a9c8d1; margin-left: 4px; }
+
+/* Item grid */
+.sh-panel { grid-area: panel; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 8px; }
+.sh-panel-head { display: grid; gap: 1px; }
+.sh-panel-head h3 { margin: 0; font: 600 26px/1 Teko, Arial; letter-spacing: 1.4px; text-transform: uppercase; }
+.sh-panel-head span { font: 600 12px Rajdhani; letter-spacing: .6px; color: #8fb1be; }
+.sh-grid { min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; align-content: start; padding: 2px 4px 4px 0; scrollbar-width: thin; scrollbar-color: #4d6b78 transparent; }
+.sh-section { grid-column: 1 / -1; font: 700 11px Rajdhani; letter-spacing: 2px; color: #8bb4c0; padding-top: 4px; border-bottom: 1px solid #a1c2cf26; }
+.sh-section:first-child { padding-top: 0; }
+.sh-empty { grid-column: 1 / -1; color: #8fb1be; font: 600 14px Rajdhani; }
+.sh-card { position: relative; display: grid; grid-template-rows: auto 1fr; border: 1px solid #a1c2cf2b; border-top: 3px solid #3f5967; background: #0b1822cc; cursor: pointer; transition: background .15s, border-color .15s, transform .15s; }
+.sh-card:hover { background: #12293a; border-top-color: #6fa1b3; }
+.sh-card.sel { border-color: #f7aa6288; border-top-color: var(--acc); background: linear-gradient(180deg, #f7aa6222, #0b1822cc 60%); box-shadow: 0 0 0 1px #f7aa6244; }
+.sh-card.equipped { border-top-color: var(--good); }
+.sh-card.locked { border-top-color: #7c6a58; }
+.sh-thumb { position: relative; aspect-ratio: 224 / 140; background: #0e2433; overflow: hidden; }
+.sh-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sh-card.locked .sh-thumb img { filter: saturate(.6) brightness(.82); }
+.sh-badge { position: absolute; left: 6px; top: 6px; font: 700 10px Rajdhani; letter-spacing: 1.4px; padding: 1px 6px; background: #07131dd9; color: #bcd2da; border: 1px solid #a1c2cf55; display: inline-flex; align-items: center; }
+.sh-badge.equipped { color: #0c1a24; background: var(--good); border-color: var(--good); }
+.sh-badge.owned { color: #cfe9d6; border-color: #8fe3a299; }
+.sh-badge.locked { color: var(--gold); border-color: #f7aa6288; padding: 3px 6px; }
+.sh-lock { display: inline-block; position: relative; width: 9px; height: 7px; background: currentColor; border-radius: 1px; margin-top: 4px; }
+.sh-lock::before { content: ''; position: absolute; left: 1.5px; top: -5px; width: 4px; height: 5px; border: 1.5px solid currentColor; border-bottom: 0; border-radius: 3px 3px 0 0; box-sizing: content-box; }
+.sh-dots { position: absolute; left: 6px; bottom: 6px; display: flex; gap: 3px; }
+.sh-dots i { width: 14px; height: 14px; border: 1px solid #000000aa; box-shadow: 0 0 0 1px #ffffff40; }
+.sh-try-flag { position: absolute; right: 6px; bottom: 6px; font: 700 10px Rajdhani; letter-spacing: 1.4px; padding: 1px 6px; background: var(--acc); color: #1a1008; display: none; }
+.sh-card.sel.locked .sh-try-flag { display: inline-block; }
+.sh-card-body { display: grid; gap: 2px; padding: 7px 9px 8px; align-content: start; min-width: 0; }
+.sh-card-body b { font: 700 15px/1.1 Rajdhani; letter-spacing: .5px; color: #f0f9fb; overflow-wrap: anywhere; }
+.sh-maker { font: 500 10px Rajdhani; letter-spacing: .6px; color: #8aa8b5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sh-card-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 2px 6px; margin-top: 4px; }
+.sh-card-foot .sh-tier { font-size: 10px; padding: 0 5px; }
+.sh-price { font: 700 14px Rajdhani; letter-spacing: 1px; color: var(--gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sh-card.owned .sh-price, .sh-card.equipped .sh-price { color: #9fc9aa; font-size: 12px; letter-spacing: 1.6px; }
+.sh-card.poor .sh-price { color: var(--bad); }
+@media (prefers-reduced-motion: no-preference) {
+  .sh-card.bought { animation: sh-bought .7s ease-out; }
+}
+@keyframes sh-bought { 0% { box-shadow: 0 0 0 0 #8fe3a2cc; transform: scale(1.03); } 100% { box-shadow: 0 0 0 14px #8fe3a200; transform: none; } }
+
+/* Footer, toast */
+.sh-foot { grid-area: foot; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 26px; padding-top: 8px; border-top: 1px solid #a1c2cf30; }
+.sh-totals { display: flex; flex-wrap: wrap; gap: 6px 22px; }
+.sh-totals div { display: grid; grid-template-columns: auto auto; column-gap: 7px; align-items: baseline; }
+.sh-totals span { grid-column: 1 / -1; font: 700 10px Rajdhani; letter-spacing: 1.8px; color: #7f9fac; }
+.sh-totals b { font: 600 24px/1 Teko, Arial; font-variant-numeric: tabular-nums; color: #f1fafc; }
+.sh-totals em { font: 700 12px Rajdhani; font-style: normal; }
+.sh-totals .good { color: var(--good); } .sh-totals .bad { color: var(--bad); }
+.sh-keys { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-left: auto; font: 600 11px Rajdhani; letter-spacing: 1.2px; color: #9db8c3; }
+.sh-keys kbd { font: 700 10px Rajdhani; padding: 1px 5px; border: 1px solid #a1c2cf55; color: #a9c8d1; margin-right: 3px; }
+.sh-foot { position: relative; }
+.sh-toast { position: absolute; right: 0; top: 50%; transform: translateY(-50%); z-index: 3; max-width: min(56%, 640px); padding: 9px 16px; border: 1px solid #a1c2cf55; border-left: 4px solid var(--good); background: #07131df5; font: 700 13px Rajdhani; letter-spacing: 1.3px; color: #eef8fa; opacity: 0; pointer-events: none; text-align: left; }
+.sh-toast.on { opacity: 1; }
+.sh-foot.toasting .sh-keys { visibility: hidden; }
+.sh-toast[data-tone='bad'] { border-left-color: var(--bad); color: #ffd9cf; }
+.sh-toast[data-tone='warn'] { border-left-color: var(--acc); color: var(--gold); }
+@media (prefers-reduced-motion: no-preference) { .sh-toast { transition: opacity .2s; } }
+
+/* Narrow screens: stack the stage over the grid and let the whole screen scroll. */
+@media (max-width: 980px) {
+  #shop { overflow-y: auto; align-items: start; }
+  .sh-shell { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; grid-template-areas: 'head' 'tabs' 'stage' 'panel' 'foot'; }
+  .sh-stage { height: 56vh; min-height: 340px; }
+  .sh-grid { overflow: visible; }
+  .sh-keys { margin-left: 0; }
+  .sh-info { grid-template-columns: minmax(0, 1fr); }
+  .sh-info-buy { text-align: left; }
+}
+/* Short screens: tighter header and info strip so the mech keeps room. */
+@media (max-height: 700px) and (min-width: 981px) {
+  .sh-head { padding-bottom: 4px; } .sh-title h2 { font-size: 34px; } .sh-kicker { display: none; } .sh-wallet b { font-size: 30px; }
+  .sh-tab { padding: 6px 10px; } .sh-info { padding: 8px 12px 10px; gap: 6px 14px; } .sh-info p { -webkit-line-clamp: 1; font-size: 13px; } .sh-info h3 { font-size: 22px; } .sh-bigprice { font-size: 26px; }
+  .sh-btn.primary, .sh-btn.buy { padding: 8px 16px; } .sh-totals b { font-size: 21px; } .sh-panel-head span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { #shop *, #shop *::before { transition: none !important; animation: none !important; } }
+
+/* Paint swatches in the launch menu: a paint you do not own yet is dimmed with a corner tick and opens the shop. */
+.paint-swatch.locked { opacity: .55; }
+.paint-swatch.locked::before { content: ''; position: absolute; right: -3px; top: -3px; width: 9px; height: 9px; border-radius: 50%; background: #f7aa62; border: 2px solid #0a141c; }
+.paint-swatch.locked:hover, .paint-swatch.locked:focus-visible { opacity: 1; }

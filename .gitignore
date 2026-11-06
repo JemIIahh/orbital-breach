@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.vercel/
+.DS_Store
+
+.env
+.env.*
+!.env.example
+.claude/
+.codex/
+.agents/
+*.tmp.html
+*.log
+artifacts/

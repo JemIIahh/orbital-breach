@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="500" viewBox="0 0 720 500" fill="none">
+<defs>
+ <radialGradient id="orbit"><stop stop-color="#438ba1" stop-opacity=".3"/><stop offset="1" stop-color="#438ba1" stop-opacity="0"/></radialGradient>
+ <radialGradient id="city"><stop stop-color="#cb9364" stop-opacity=".23"/><stop offset="1" stop-color="#cb9364" stop-opacity="0"/></radialGradient>
+ <radialGradient id="forest"><stop stop-color="#79ae83" stop-opacity=".25"/><stop offset="1" stop-color="#79ae83" stop-opacity="0"/></radialGradient>
+ <linearGradient id="planet" x1="92" y1="124" x2="193" y2="240" gradientUnits="userSpaceOnUse"><stop stop-color="#6bb2c2"/><stop offset=".5" stop-color="#326985"/><stop offset="1" stop-color="#112b43"/></linearGradient>
+ <linearGradient id="tower" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#889b9c"/><stop offset="1" stop-color="#2e4c58"/></linearGradient>
+ <linearGradient id="island" x1="545" y1="260" x2="616" y2="320" gradientUnits="userSpaceOnUse"><stop stop-color="#628a6a"/><stop offset="1" stop-color="#253e37"/></linearGradient>
+ <clipPath id="earth"><circle cx="151" cy="191" r="55"/></clipPath>
+</defs>
+<circle cx="150" cy="218" r="145" fill="url(#orbit)"/><circle cx="375" cy="238" r="145" fill="url(#city)"/><circle cx="590" cy="235" r="135" fill="url(#forest)"/>
+<path d="M42 351H678M42 361H678" stroke="#92ccd6" stroke-opacity=".06"/>
+<path d="M150 299V321Q150 339 171 339H345Q375 339 375 313V299M375 339H565Q590 339 590 314V299" stroke="#a3d5d8" stroke-opacity=".5" stroke-dasharray="4 6"/>
+<path d="m265 334 6 5-6 5m217-10 6 5-6 5" stroke="#a3d5d8"/>
+<!-- Kestrel: Earth, an inhabited ring, external solar wings. -->
+<circle cx="151" cy="191" r="59" stroke="#8eddeb" stroke-opacity=".18"/>
+<circle cx="151" cy="191" r="55" fill="url(#planet)"/>
+<g clip-path="url(#earth)" fill="#9ac3b5" opacity=".48"><path d="m103 158 32-16 13 13-4 22-21 4-8 21-16-9zM168 167l27 5 18 23-18 13-21-8-10-18zM145 207l16-3 13 17-9 21-14-5z"/><path d="m90 174 40-8 40 9 34-5M101 218l39-5 38 7 27-3" stroke="#e0edf0" stroke-width="5" opacity=".6"/></g>
+<g transform="rotate(-25 150 240)">
+ <ellipse cx="150" cy="240" rx="82" ry="45" stroke="#0d202d" stroke-width="19"/>
+ <ellipse cx="150" cy="235" rx="82" ry="45" stroke="#89a9b2" stroke-width="9"/>
+ <ellipse cx="150" cy="233" rx="82" ry="45" stroke="#c3dcdb" stroke-width="2"/>
+ <ellipse cx="150" cy="240" rx="80" ry="43" stroke="#77d8df" stroke-width="2" stroke-dasharray="10 5"/>
+ <path d="M66 240H38m196 0h29" stroke="#9ab6c3" stroke-width="4"/>
+ <path d="M35 221h28v35H35zm201 0h28v35h-28" fill="#243e5e" stroke="#7899b7"/>
+ <path d="M44 221v35m10-35v35m191-35v35m10-35v35M35 232h28m-28 12h28m173-12h28m-28 12h28" stroke="#829fbc" stroke-width=".6"/>
+</g>
+<path d="M150 104V89m-40 28-7-11m82 14 8-10" stroke="#a3d5d8" stroke-opacity=".4"/>
+<!-- Meridian: stepped streets and distinct architectural silhouettes. -->
+<path d="m290 276 77-41 96 44-79 47z" fill="#172d36" stroke="#5c7b83"/>
+<path d="m310 279 65-32 70 32-65 35z" fill="#31434a"/>
+<path d="m350 258 46 48m-69-34 69 32" stroke="#d2ad78" stroke-width="2"/>
+<path d="m306 273 0-80 27-14 27 13v81l-27 15z" fill="#58737c"/>
+<path d="m333 179 27 13v81l-27 15z" fill="#263f4d"/>
+<path d="m306 193 27 14 27-15m-27 15v81" stroke="#a5b7b4" stroke-opacity=".7"/>
+<path d="m317 211 9 4m-9 10 9 4m-9 10 9 4m-9 10 9 4m16-40 9-5m-9 18 9-5m-9 18 9-5m-9 18 9-5" stroke="#b1d9d8" stroke-width="2"/>
+<path d="M365 258V148l28-15 26 14v110l-26 15z" fill="url(#tower)"/>
+<path d="m393 133 26 14v110l-26 15z" fill="#2a4651"/>
+<path d="m365 148 28 15 26-16m-26 16v109" stroke="#b6c6be"/>
+<path d="m372 170 13 7m-13 8 13 7m-13 8 13 7m-13 8 13 7m-13 8 13 7m16-61 9-5m-9 20 9-5m-9 20 9-5m-9 20 9-5m-9 20 9-5" stroke="#a7c5c4" stroke-width="2"/>
+<path d="m423 275 0-64 17-9 17 9v64l-17 10z" fill="#72858a"/><path d="m440 202 17 9v64l-17 10z" fill="#304b54"/>
+<path d="m429 227 6 3m-6 9 6 3m-6 9 6 3" stroke="#e0c399" stroke-width="2"/>
+<path d="M393 130V112m-6 9h12" stroke="#b8d5ce"/>
+<!-- Eden: a living island, path, tree canopy and an illuminated archive. -->
+<path d="m509 269 59-43 102 37-69 61-58-19z" fill="url(#island)" stroke="#75a488"/>
+<path d="m509 269 34 36 58 19 69-61-38 54-37 25-59-29z" fill="#263f3c"/>
+<path d="m545 284 25-5 16-15 24-8" stroke="#c2bf90" stroke-width="4"/>
+<path d="m603 300 16-14 23-10-21 24z" fill="#74b7b1" opacity=".55"/>
+<path d="M592 267V188m0 45-24-24m24 5 21-22m-21 7-11-17" stroke="#8c9270" stroke-width="6"/>
+<path d="m548 188 12-25 29-11 35 13 17 28-21 25-36 4-29-13z" fill="#507b59"/>
+<path d="m551 187 18-23 22-9 19 12-13 20-24 8z" fill="#83a576"/>
+<path d="m585 191 16-22 23 3 12 20-20 18-25-3z" fill="#6a956a"/>
+<path d="m561 207 18-12 16 14-9 11-18-3z" fill="#72996a"/>
+<path d="m531 264 0-28m0 8-10-9m10 1 8-9" stroke="#6c8762" stroke-width="3"/><path d="m515 230 7-13 15-2 10 15-11 13-13-1z" fill="#658c66"/>
+<path d="m637 255 0-27m0 6-9-7m9 2 7-7" stroke="#6c8762" stroke-width="3"/><path d="m623 225 5-12 14-1 9 14-10 10-11-1z" fill="#557f5b"/>
+<ellipse cx="591" cy="274" rx="12" ry="5" stroke="#bef3be" stroke-opacity=".5"/><path d="m591 256 6 10-6 10-6-10z" fill="#c3edb4"/>
+<g stroke="#abd7d2" stroke-opacity=".2"><circle cx="150" cy="240" r="111" stroke-dasharray="2 10"/><circle cx="375" cy="240" r="111" stroke-dasharray="2 10"/><circle cx="590" cy="240" r="111" stroke-dasharray="2 10"/></g>
+</svg>

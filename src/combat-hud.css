@@ -1,0 +1,18 @@
+/* Directional damage ring, near-miss ticks and low-health pulse. Sits above the game canvas and under menus. */
+.ch-root{position:fixed;inset:0;pointer-events:none;z-index:4;overflow:hidden}
+.ch-danger{position:absolute;inset:0;opacity:0;background:radial-gradient(ellipse at 50% 50%,transparent 34%,rgba(215,24,24,.34) 70%,rgba(120,0,6,.78) 100%);mix-blend-mode:normal}
+.ch-dir{--a:0deg;--c:#ff3b30;position:absolute;left:50%;top:50%;width:min(360px,64vmin);height:min(360px,64vmin);margin:calc(min(360px,64vmin)/-2) 0 0 calc(min(360px,64vmin)/-2);opacity:0;transform:rotate(var(--a))}
+.ch-dir::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from -17deg,var(--c) 0 34deg,transparent 34deg 360deg);-webkit-mask:radial-gradient(circle,transparent 0 63%,#000 64.5% 71%,transparent 73%);mask:radial-gradient(circle,transparent 0 63%,#000 64.5% 71%,transparent 73%);filter:drop-shadow(0 0 10px var(--c))}
+.ch-dir[data-kind=shield]{--c:#49dcff}
+.ch-dir[data-kind=near]{--c:#ffe9c4}
+.ch-dir[data-kind=near]::before{background:conic-gradient(from -7deg,var(--c) 0 14deg,transparent 14deg 360deg)}
+@media (prefers-reduced-motion:reduce){.ch-danger{transition:none}}
+#damage{box-shadow:inset 0 0 150px 60px #ff2a1a8f}
+#damage.shield{box-shadow:inset 0 0 120px 40px #35d4ff4d}
+@keyframes ch-blink{0%,100%{opacity:1}50%{opacity:.25}}
+.ch-dir[data-kind=warn]{--c:#ffb21e}
+.ch-dir[data-kind=warn]::before{background:conic-gradient(from -12deg,var(--c) 0 24deg,transparent 24deg 360deg);animation:ch-blink .26s steps(2,jump-none) infinite}
+@media (prefers-reduced-motion:reduce){.ch-dir[data-kind=warn]::before{animation:none}}
+/* The control hints stay for a new pilot's first minute, then step back so the HUD stops competing with the fight. */
+.key-strip{transition:opacity 1.4s ease}
+.key-strip.is-quiet{opacity:.22}

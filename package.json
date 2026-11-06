@@ -1,0 +1,25 @@
+{
+  "name": "orbital-breach",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/*.test.js",
+    "dev:client": "vite --host 0.0.0.0 --strictPort",
+    "server": "node server/index.js",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "three": "0.185.1",
+    "ws": "file:vendor/ws"
+  },
+  "devDependencies": {
+    "vite": "5.4.21"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
